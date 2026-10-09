@@ -132,6 +132,10 @@ genoffice-trio/
 3. **Caminho do Preload no Electron**: Corrigido o caminho do script preload para `path.join(__dirname, '../preload/index.js')`, compatível com a estrutura de saída do `electron-vite`.
 4. **Shell Renderer**: Adicionado suporte de URL de desenvolvimento (`http://localhost:5176`), tolerância a reconexão automática e persistência das abas na renderização.
 5. **Configuração de ESLint e Prettier**: Criados os arquivos `eslint.config.mjs` e `.prettierrc` para linting e formatação limpos em todo o repositório.
+6. **Renderização e Ferramentas Reais Implementadas**:
+   - **Docs**: Editor de texto rico funcional com Ribbon completa (Negrito, Itálico, Sublinhado, Cores, Alinhamentos, Listas, Títulos, Tabela dinâmica, Inserção de Imagens, Links), seleção de fonte/tamanho, margens/orientação de página, atalhos de teclado (Ctrl+B/I/U/Z), estatísticas de palavras/caracteres e exportação (.html / impressão em PDF).
+   - **Sheets**: Planilha eletrônica com motor de fórmulas reativo (`=SUM`, `=AVERAGE`, `=MAX`, `=MIN`, `=COUNT`, operações aritméticas), Barra de Fórmulas (`fx` com input sincronizado), integração real com arquivos Excel (`.xlsx` e `.csv`) via biblioteca `xlsx` (abrir e exportar), abas de planilhas múltiplas (+), formatação visual de células (moeda `R$`, porcentagem, cores, negrito) e barra de status com estatísticas automáticas.
+   - **PDF**: Renderizador real baseado em **PDF.js** (`pdfjs-dist`) sobre HTML5 Canvas de alta resolução, navegação por miniaturas (thumbnails) na barra lateral, paginação rápida (primeira, anterior, próxima, última ou salto numérico), controle de zoom fluido (50% a 200%), rotação de 90° em 90°, abertura de qualquer arquivo PDF local, download e impressão nativa.
 
 ---
 
@@ -156,4 +160,3 @@ npm run dev
 # ou
 npm run dev:electron
 ```
-
