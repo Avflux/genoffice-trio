@@ -13,12 +13,16 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently -k -n docs,sheets,pdf,shell -c blue,green,red,magenta \"npm run dev:renderer -w @genoffice/docs\" \"npm run dev:renderer -w @genoffice/sheets\" \"npm run dev:renderer -w @genoffice/pdf\" \"cross-env DOCS_RENDERER_URL=http://localhost:5173 SHEETS_RENDERER_URL=http://localhost:5174 PDF_RENDERER_URL=http://localhost:5175 npm run dev -w @genoffice/shell\"",
+    "start": "npm run build && electron apps/shell",
+    "shell": "npm run start",
+    "dev": "concurrently -k -n docs,sheets,pdf,shell -c blue,green,red,magenta \"npm run dev:renderer -w @genoffice/docs\" \"npm run dev:renderer -w @genoffice/sheets\" \"npm run dev:renderer -w @genoffice/pdf\" \"npm run dev:renderer -w @genoffice/shell\"",
+    "dev:electron": "npm run build:shell && concurrently -k -n docs,sheets,pdf,shell,electron -c blue,green,red,magenta,yellow \"npm run dev:renderer -w @genoffice/docs\" \"npm run dev:renderer -w @genoffice/sheets\" \"npm run dev:renderer -w @genoffice/pdf\" \"npm run dev:renderer -w @genoffice/shell\" \"cross-env NODE_ENV=development electron apps/shell\"",
     "dev:docs": "npm run dev -w @genoffice/docs",
     "dev:sheets": "npm run dev -w @genoffice/sheets",
     "dev:pdf": "npm run dev -w @genoffice/pdf",
+    "dev:shell": "npm run dev -w @genoffice/shell",
     "build": "npm run build -w @genoffice/docs && npm run build -w @genoffice/sheets && npm run build -w @genoffice/pdf && npm run build -w @genoffice/shell",
-    "shell": "npm run build && electron apps/shell",
+    "build:shell": "npm run build -w @genoffice/shell",
     "format": "prettier --write \"**/*.{ts,tsx,css,json,mjs}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,css,json,mjs}\"",
     "lint": "eslint .",

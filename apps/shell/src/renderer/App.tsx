@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 type Tab = 'docs' | 'sheets' | 'pdf'
 
@@ -8,51 +8,28 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'pdf', label: 'PDF', icon: '📑' },
 ]
 
-function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system')
+const RENDERER_URLS: Record<Tab, string> = {
+  docs: import.meta.env.VITE_DOCS_URL || 'http://localhost:5173',
+  sheets: import.meta.env.VITE_SHEETS_URL || 'http://localhost:5174',
+  pdf: import.meta.env.VITE_PDF_URL || 'http://localhost:5175',
+}
 
-  useEffect(() => {
-    const applyTheme = (t: string) => {
-      setTheme(t as 'light' | 'dark' | 'system')
-      if (t === 'system') {
-        document.documentElement.removeAttribute('data-theme')
-      } else {
-        document.documentElement.setAttribute('data-theme', t)
-      }
-    }
-    applyTheme('system')
-  }, [theme, setTheme])
-
-  const cycleTheme = () => {
-    const next: ('light' | 'dark' | 'system')[] = ['light', 'dark', 'system']
-    const current = next.indexOf(theme)
-    const newTheme = next[(current + 1) % next.length]
-    setTheme(newTheme)
-  }
-
+function ThemeToggle({
+  theme,
+  onCycle,
+}: {
+  theme: 'light' | 'dark' | 'system'
+  onCycle: () => void
+}) {
   return (
-    <button className="icon-btn" onClick={cycleTheme} title="Alternar tema (Light / Dark / System)">
+    <button
+      className="icon-btn"
+      onClick={onCycle}
+      title="Alternar tema (Light / Dark / System)"
+    >
       {theme === 'light' ? '☀️' : theme === 'dark' ? '🌙' : '💻'}
     </button>
   )
-}
-
-async function applyThemeToFrame(iframe: HTMLIFrameElement, theme: 'light' | 'dark' | 'system') {
-  const doc = iframe.contentDocument
-  if (!doc) return
-  doc.documentElement.setAttribute('data-theme', theme)
-}
-
-async function switchTab(tab: Tab, iframe: HTMLIFrameElement, appTheme: 'light' | 'dark' | 'system') {
-  const urlMap: Record<Tab, string> = {
-    docs: 'http://localhost:5173',
-    sheets: 'http://localhost:5174',
-    pdf: 'http://localhost:5175',
-  }
-  iframe.src = urlMap[tab]
-  if (appTheme !== 'system') {
-    await applyThemeToFrame(iframe, appTheme)
-  }
 }
 
 export function App() {
@@ -60,15 +37,21 @@ export function App() {
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system')
 
   useEffect(() => {
-    document.documentElement.removeAttribute('data-theme')
-    document.documentElement.setAttribute('data-theme', theme)
+    if (theme === 'system') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
   }, [theme])
 
-  const activeFrameRef = useRef<HTMLIFrameElement | null>(null)
-
-  const switchTabLocal = (tab: Tab) => {
-    setActiveTab(tab)
-    switchTab(tab, activeFrameRef.current!, theme)
+  const cycleTheme = () => {
+    const sequence: ('light' | 'dark' | 'system')[] = [
+      'light',
+      'dark',
+      'system',
+    ]
+    const nextIndex = (sequence.indexOf(theme) + 1) % sequence.length
+    setTheme(sequence[nextIndex])
   }
 
   return (
@@ -85,12 +68,24 @@ export function App() {
           </button>
         ))}
         <div className="toolbar-spacer" />
-        <ThemeToggle />
+        <ThemeToggle theme={theme} onCycle={cycleTheme} />
       </div>
       <div className="renderer-frame">
-        {activeTab === 'docs' && <iframe ref={(el) => { activeFrameRef.current = el }} title="Docs" src="http://localhost:5173" />}
-        {activeTab === 'sheets' && <iframe ref={(el) => { activeFrameRef.current = el }} title="Sheets" src="http://localhost:5174" />}
-        {activeTab === 'pdf' && <iframe ref={(el) => { activeFrameRef.current = el }} title="PDF" src="http://localhost:5175" />}
+        <iframe
+          title="Docs"
+          src={RENDERER_URLS.docs}
+          style={{ display: activeTab === 'docs' ? 'block' : 'none' }}
+        />
+        <iframe
+          title="Sheets"
+          src={RENDERER_URLS.sheets}
+          style={{ display: activeTab === 'sheets' ? 'block' : 'none' }}
+        />
+        <iframe
+          title="PDF"
+          src={RENDERER_URLS.pdf}
+          style={{ display: activeTab === 'pdf' ? 'block' : 'none' }}
+        />
       </div>
     </div>
   )

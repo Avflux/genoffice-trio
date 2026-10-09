@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 export function App() {
   const [currentPage, setCurrentPage] = useState(1)
@@ -6,16 +6,40 @@ export function App() {
   const [zoom, setZoom] = useState(100)
   const [hasDocument, setHasDocument] = useState(false)
   const [fileUrl, setFileUrl] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleOpenFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const url = URL.createObjectURL(file)
+      setFileUrl(url)
+      setHasDocument(true)
+      setTotalPages(3)
+      setCurrentPage(1)
+    }
+  }
+
+  const triggerOpenFileDialog = () => {
+    fileInputRef.current?.click()
+  }
 
   const pages = []
   for (let i = 0; i < totalPages; i++) {
     pages.push(
       <div key={i} className="pdf-page">
-        <div className="pdf-page-content">
+        <div
+          className="pdf-page-content"
+          style={{
+            transform: `scale(${zoom / 100})`,
+            transformOrigin: 'top center',
+          }}
+        >
           <div className="pdf-placeholder">
             <div className="pdf-placeholder-icon">📄</div>
             <div className="pdf-placeholder-text">Página {i + 1}</div>
-            <div className="pdf-placeholder-sub">PDF.js render aqui</div>
+            <div className="pdf-placeholder-sub">
+              {fileUrl ? 'Documento carregado' : 'PDF.js render aqui'}
+            </div>
           </div>
         </div>
       </div>
@@ -38,6 +62,13 @@ export function App() {
 
   return (
     <div className="app">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf"
+        style={{ display: 'none' }}
+        onChange={handleOpenFile}
+      />
       {/* Ribbon */}
       <div className="ribbon">
         <div className="ribbon-tabs">
@@ -50,11 +81,11 @@ export function App() {
         <div className="ribbon-body">
           <div className="ribbon-group">
             <div className="ribbon-group-items">
-              <button className="rb-big">
+              <button className="rb-big" onClick={triggerOpenFileDialog}>
                 <div className="rb-big-icon">📂</div>
                 Abrir
               </button>
-              <button className="rb-big">
+              <button className="rb-big" disabled={!hasDocument}>
                 <div className="rb-big-icon">💾</div>
                 Salvar
               </button>
@@ -86,7 +117,13 @@ export function App() {
         <>
           {/* Toolbar de navegação */}
           <div className="pdf-toolbar">
-            <button className="qa-btn">◀</button>
+            <button
+              className="qa-btn"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage <= 1}
+            >
+              ◀
+            </button>
             <input
               className="tb-page-input"
               type="number"
@@ -100,23 +137,39 @@ export function App() {
                 }
               }}
             />
-            <span className="tb-page-total">
-              / {totalPages || 1}
-            </span>
+            <span className="tb-page-total">/ {totalPages || 1}</span>
             <div className="tb-sep" />
-            <button className="qa-btn">➖</button>
+            <button
+              className="qa-btn"
+              onClick={() => setZoom((z) => Math.max(25, z - 10))}
+            >
+              ➖
+            </button>
             <span className="tb-zoom">{zoom}%</span>
-            <button className="qa-btn">➕</button>
+            <button
+              className="qa-btn"
+              onClick={() => setZoom((z) => Math.min(300, z + 10))}
+            >
+              ➕
+            </button>
             <div className="tb-sep" />
-            <button className="qa-btn" title="Ir para página">📑</button>
-            <button className="qa-btn" title="Bookmarks">🔖</button>
-            <button className="qa-btn" title="Thumbnails">🖼️</button>
+            <button className="qa-btn" title="Ir para página">
+              📑
+            </button>
+            <button className="qa-btn" title="Bookmarks">
+              🔖
+            </button>
+            <button className="qa-btn" title="Thumbnails">
+              🖼️
+            </button>
           </div>
 
           {/* Área do PDF */}
           <div className="pdf-body">
             <div className="pdf-thumbs">
-              {totalPages > 0 ? thumbnails : (
+              {totalPages > 0 ? (
+                thumbnails
+              ) : (
                 <div className="pdf-placeholder">
                   <div className="pdf-placeholder-icon">📂</div>
                   <div className="pdf-placeholder-text">Abra um PDF</div>
@@ -125,14 +178,14 @@ export function App() {
             </div>
             <div className="pdf-scroll">
               {totalPages > 0 ? (
-                <div className="pdf-row">
-                  {pages}
-                </div>
+                <div className="pdf-row">{pages}</div>
               ) : (
                 <div className="pdf-empty">
                   <div className="pdf-empty-icon">📄</div>
                   <div className="pdf-empty-title">Nenhum documento aberto</div>
-                  <div className="pdf-empty-sub">Abra um arquivo PDF para visualizar</div>
+                  <div className="pdf-empty-sub">
+                    Abra um arquivo PDF para visualizar
+                  </div>
                 </div>
               )}
             </div>
@@ -147,7 +200,11 @@ export function App() {
                 <div className="pdf-empty-icon">📄</div>
                 <div className="pdf-empty-title">GenOffice PDF</div>
                 <div className="pdf-empty-sub">
-                  <button className="rb-big" style={{ padding: '12px 32px' }}>
+                  <button
+                    className="rb-big"
+                    style={{ padding: '12px 32px' }}
+                    onClick={triggerOpenFileDialog}
+                  >
                     <div className="rb-big-icon">📂</div>
                     Abrir PDF
                   </button>
@@ -165,7 +222,9 @@ export function App() {
           <span>—</span>
           {hasDocument && totalPages > 0 ? (
             <>
-              <span>Página {currentPage} de {totalPages}</span>
+              <span>
+                Página {currentPage} de {totalPages}
+              </span>
               <span>—</span>
               <span>Zoom: {zoom}%</span>
             </>
@@ -174,8 +233,12 @@ export function App() {
           )}
         </div>
         <div className="status-right">
-          <button className="qa-btn" title="Modo Leitura">📖</button>
-          <button className="qa-btn" title="Layout de Página">📐</button>
+          <button className="qa-btn" title="Modo Leitura">
+            📖
+          </button>
+          <button className="qa-btn" title="Layout de Página">
+            📐
+          </button>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import path from 'path'
 import log from 'electron-log'
 
@@ -11,6 +11,8 @@ const RENDERERS = {
   pdf: process.env.PDF_RENDERER_URL || 'http://localhost:5175',
 }
 
+const SHELL_URL = process.env.SHELL_RENDERER_URL || 'http://localhost:5176'
+
 let mainWindow: BrowserWindow | null = null
 
 function createWindow() {
@@ -20,7 +22,7 @@ function createWindow() {
     minWidth: 900,
     minHeight: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
@@ -34,7 +36,14 @@ function createWindow() {
   })
 
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.loadURL(RENDERERS.docs)
+    const loadDev = (retries = 15) => {
+      mainWindow?.loadURL(SHELL_URL).catch(() => {
+        if (retries > 0) {
+          setTimeout(() => loadDev(retries - 1), 1000)
+        }
+      })
+    }
+    loadDev()
     mainWindow.webContents.openDevTools()
   } else {
     mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))

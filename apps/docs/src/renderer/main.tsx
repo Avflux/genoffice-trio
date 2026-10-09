@@ -28,11 +28,14 @@ async function bootstrap() {
   let docTheme = 'follow'
 
   try {
-    ;[lang, theme, docTheme] = await Promise.all([
+    const [l, t, dt] = await Promise.all([
       window.desktop?.getLanguage().catch(() => 'zh'),
       window.desktop?.getTheme().catch(() => 'system'),
       window.desktop?.getDocumentTheme?.().catch(() => 'follow'),
     ])
+    if (l) lang = l
+    if (t) theme = t
+    if (dt) docTheme = dt
   } catch {
     // dev sem preload
   }
@@ -42,14 +45,13 @@ async function bootstrap() {
   applyDocumentTheme(docTheme)
   window.desktop?.onThemeChanged?.(applyTheme)
   window.desktop?.onDocumentThemeChanged?.(applyDocumentTheme)
-  await window.desktop?.getAiPanelPrefs?.()
+  await window.desktop
+    ?.getAiPanelPrefs?.()
     .then(applyAiPanelPrefs)
     .catch(() => {})
   window.desktop?.onAiPanelPrefsChanged?.(applyAiPanelPrefs)
 
-  createRoot(document.getElementById('root')!).render(
-    <App />
-  )
+  createRoot(document.getElementById('root')!).render(<App />)
 }
 
 void bootstrap()

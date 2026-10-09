@@ -44,8 +44,8 @@
 
   /* AI panel */
   --gs-font-sans:
-    'Arial', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    sans-serif;
+    'Arial', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', sans-serif;
   --color-btn-primary: #232425;
   --color-btn-primary-hover: #393a3b;
   --color-btn-primary-text: #ffffff;

@@ -14,7 +14,11 @@
 
   --pdf-paper: #fff;
 
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'Segoe UI',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   color: var(--text);
   background: var(--chrome-bg);
   font-size: 13px;
@@ -33,9 +37,13 @@
   --pdf-scroll-thumb: rgb(255 255 255 / 28%);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }

@@ -17,7 +17,11 @@
   --sheets-statusbar-border: #e1e4e8;
   --sheets-statusbar-hover: rgb(0 0 0 / 8%);
 
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'Segoe UI',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   color: var(--text);
   background: var(--surface);
   font-size: 13px;
@@ -36,9 +40,13 @@
   --sheets-statusbar-hover: rgb(255 255 255 / 10%);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }

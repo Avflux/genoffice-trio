@@ -37,25 +37,43 @@ export function App() {
             <>
               <div className="ribbon-group">
                 <div className="ribbon-group-items">
-                  <button className="rb-icon" title="Copiar">📋</button>
-                  <button className="rb-icon" title="Colar">📋</button>
-                  <button className="rb-icon" title="Recortar">✂️</button>
+                  <button className="rb-icon" title="Copiar">
+                    📋
+                  </button>
+                  <button className="rb-icon" title="Colar">
+                    📋
+                  </button>
+                  <button className="rb-icon" title="Recortar">
+                    ✂️
+                  </button>
                 </div>
               </div>
               <div className="ribbon-sep" />
               <div className="ribbon-group">
                 <div className="ribbon-group-items">
-                  <button className="rb-icon" title="Negrito"><b>B</b></button>
-                  <button className="rb-icon" title="Itálico"><i>I</i></button>
-                  <button className="rb-icon" title="Sublinhado"><u>U</u></button>
+                  <button className="rb-icon" title="Negrito">
+                    <b>B</b>
+                  </button>
+                  <button className="rb-icon" title="Itálico">
+                    <i>I</i>
+                  </button>
+                  <button className="rb-icon" title="Sublinhado">
+                    <u>U</u>
+                  </button>
                 </div>
               </div>
               <div className="ribbon-sep" />
               <div className="ribbon-group">
                 <div className="ribbon-group-items">
-                  <button className="rb-icon" title="Alinhar esquerda">⬅️</button>
-                  <button className="rb-icon" title="Centralizar">⬇️</button>
-                  <button className="rb-icon" title="Alinhar direita">➡️</button>
+                  <button className="rb-icon" title="Alinhar esquerda">
+                    ⬅️
+                  </button>
+                  <button className="rb-icon" title="Centralizar">
+                    ⬇️
+                  </button>
+                  <button className="rb-icon" title="Alinhar direita">
+                    ➡️
+                  </button>
                 </div>
               </div>
             </>
@@ -64,9 +82,15 @@ export function App() {
             <>
               <div className="ribbon-group">
                 <div className="ribbon-group-items">
-                  <button className="rb-icon" title="Imagem">🖼️</button>
-                  <button className="rb-icon" title="Tabela">📊</button>
-                  <button className="rb-icon" title="Forma">🔷</button>
+                  <button className="rb-icon" title="Imagem">
+                    🖼️
+                  </button>
+                  <button className="rb-icon" title="Tabela">
+                    📊
+                  </button>
+                  <button className="rb-icon" title="Forma">
+                    🔷
+                  </button>
                 </div>
               </div>
             </>
@@ -75,9 +99,15 @@ export function App() {
             <>
               <div className="ribbon-group">
                 <div className="ribbon-group-items">
-                  <button className="rb-icon" title="Margens">📐</button>
-                  <button className="rb-icon" title="Orientação">🔄</button>
-                  <button className="rb-icon" title="Tamanho página">📏</button>
+                  <button className="rb-icon" title="Margens">
+                    📐
+                  </button>
+                  <button className="rb-icon" title="Orientação">
+                    🔄
+                  </button>
+                  <button className="rb-icon" title="Tamanho página">
+                    📏
+                  </button>
                 </div>
               </div>
             </>
@@ -110,10 +140,19 @@ export function App() {
           <span>Doc 1</span>
           <span>—</span>
           <span>Modo de Edição</span>
+          <span>—</span>
+          <span>
+            {content ? content.replace(/<[^>]*>/g, '').trim().length : 0}{' '}
+            caracteres
+          </span>
         </div>
         <div className="statusbar-right">
-          <button className="qa-btn" title="Salvar">💾</button>
-          <button className="qa-btn" title="Configurações">⚙️</button>
+          <button className="qa-btn" title="Salvar">
+            💾
+          </button>
+          <button className="qa-btn" title="Configurações">
+            ⚙️
+          </button>
         </div>
       </div>
     </div>

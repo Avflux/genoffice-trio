@@ -13,7 +13,11 @@
   --docs-statusbar-bg: #f3f4f6;
   --docs-statusbar-border: #e1e4e8;
 
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'Segoe UI',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   color: var(--text);
   background: var(--chrome-bg);
   font-size: 13px;
@@ -30,9 +34,13 @@
   --docs-statusbar-border: #3a3a3a;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }
@@ -183,7 +191,9 @@ button {
   width: 816px;
   min-height: 1056px;
   background: var(--docs-paper);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.28),
+    0 4px 16px rgba(0, 0, 0, 0.1);
   padding: 96px 72px;
   color: var(--docs-paper-ink);
   font-size: 14px;

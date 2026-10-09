@@ -15,7 +15,8 @@ export function App() {
   const letters = 'ABCDEFGH'.slice(0, colCount)
 
   const getCellKey = (col: number, row: number) => `${letters[col]}${row + 1}`
-  const getCellValue = (col: number, row: number) => cells[getCellKey(col, row)] || ''
+  const getCellValue = (col: number, row: number) =>
+    cells[getCellKey(col, row)] || ''
 
   const handleCellClick = useCallback((col: number, row: number) => {
     const key = getCellKey(col, row)
@@ -29,10 +30,13 @@ export function App() {
     setEditingCell(key)
   }, [])
 
-  const handleCellChange = useCallback((col: number, row: number, value: string) => {
-    const key = getCellKey(col, row)
-    setCells((prev) => ({ ...prev, [key]: value }))
-  }, [])
+  const handleCellChange = useCallback(
+    (col: number, row: number, value: string) => {
+      const key = getCellKey(col, row)
+      setCells((prev) => ({ ...prev, [key]: value }))
+    },
+    []
+  )
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -55,7 +59,7 @@ export function App() {
         rowCells.push(
           <td
             key={key}
-            className={`grid-cell ${isEditing ? 'editing' : ''}`}
+            className={`grid-cell ${isSelected ? 'selected' : ''} ${isEditing ? 'editing' : ''}`}
             style={{ gridColumn: c + 1, gridRow: r + 1 }}
             onClick={() => handleCellClick(c, r)}
             onDoubleClick={() => handleCellDoubleClick(c, r)}
@@ -76,7 +80,10 @@ export function App() {
       }
       rows.push(
         <tr key={`row-${r}`}>
-          <td className="grid-header-cell" style={{ gridColumn: 1, gridRow: r + 2, textAlign: 'center' }}>
+          <td
+            className="grid-header-cell"
+            style={{ gridColumn: 1, gridRow: r + 2, textAlign: 'center' }}
+          >
             {r + 1}
           </td>
           {rowCells}
@@ -90,45 +97,71 @@ export function App() {
     <div className="app-shell">
       {/* Header */}
       <div className="excel-header">
-        <input
-          className="workbook-title-input"
-          value={sheetName}
-          readOnly
-        />
+        <input className="workbook-title-input" value={sheetName} readOnly />
         <div className="header-spacer" />
-        <button className="qa-btn" title="Novo arquivo">📄</button>
-        <button className="qa-btn" title="Abrir">📂</button>
-        <button className="qa-btn" title="Salvar">💾</button>
+        <button className="qa-btn" title="Novo arquivo">
+          📄
+        </button>
+        <button className="qa-btn" title="Abrir">
+          📂
+        </button>
+        <button className="qa-btn" title="Salvar">
+          💾
+        </button>
       </div>
 
       {/* Ribbon */}
       <div className="ribbon">
-        {['File', 'Home', 'Insert', 'Formulas', 'Data', 'Review', 'View'].map((tab, i) => (
-          <div key={tab} className="ribbon-group">
-            <div className="ribbon-group-content">
-              <button
-                className={`ribbon-tool large ${i === 1 ? 'is-current' : ''}`}
-                onClick={() => {}}
-              >
-                <div className="tool-icon-row">
-                  {i === 0 ? '📄' : i === 1 ? '🏠' : i === 2 ? '📊' : i === 3 ? '∑' : i === 4 ? '📈' : i === 5 ? '👁️' : '🔍'}
-                </div>
-                <strong>{tab}</strong>
-              </button>
+        {['File', 'Home', 'Insert', 'Formulas', 'Data', 'Review', 'View'].map(
+          (tab, i) => (
+            <div key={tab} className="ribbon-group">
+              <div className="ribbon-group-content">
+                <button
+                  className={`ribbon-tool large ${i === 1 ? 'is-current' : ''}`}
+                  onClick={() => {}}
+                >
+                  <div className="tool-icon-row">
+                    {i === 0
+                      ? '📄'
+                      : i === 1
+                        ? '🏠'
+                        : i === 2
+                          ? '📊'
+                          : i === 3
+                            ? '∑'
+                            : i === 4
+                              ? '📈'
+                              : i === 5
+                                ? '👁️'
+                                : '🔍'}
+                  </div>
+                  <strong>{tab}</strong>
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        )}
       </div>
 
       {/* Spreadsheet */}
       <div className="sheet-body">
         <div className="spreadsheet-container">
-          <table className="spreadsheet" style={{ gridTemplateColumns: `32px repeat(${colCount}, 1fr)`, tableLayout: 'fixed' }}>
+          <table
+            className="spreadsheet"
+            style={{
+              gridTemplateColumns: `32px repeat(${colCount}, 1fr)`,
+              tableLayout: 'fixed',
+            }}
+          >
             <thead>
               <tr>
                 <td />
                 {letters.split('').map((letter, i) => (
-                  <th key={letter} className="grid-header-cell" style={{ gridColumn: i + 2 }}>
+                  <th
+                    key={letter}
+                    className="grid-header-cell"
+                    style={{ gridColumn: i + 2 }}
+                  >
                     {letter}
                   </th>
                 ))}

@@ -20,5 +20,6 @@ contextBridge.exposeInMainWorld('desktop', {
     ipcRenderer.on('ai-panel-prefs:changed', listener)
     return () => ipcRenderer.removeListener('ai-panel-prefs:changed', listener)
   },
-  convertAltChunkHtml: (html: string) => ipcRenderer.invoke('convert:alt-chunk-html', html),
+  convertAltChunkHtml: (html: string) =>
+    ipcRenderer.invoke('convert:alt-chunk-html', html),
 })

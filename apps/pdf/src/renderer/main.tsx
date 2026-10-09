@@ -19,16 +19,19 @@ async function bootstrap() {
   let theme = 'system'
 
   try {
-    ;[lang, theme] = await Promise.all([
+    const [l, t] = await Promise.all([
       window.pdfApi?.getLanguage().catch(() => 'zh'),
       window.pdfApi?.getTheme().catch(() => 'system'),
     ])
+    if (l) lang = l
+    if (t) theme = t
   } catch {}
 
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en'
   applyTheme(theme)
   window.pdfApi?.onThemeChanged?.(applyTheme)
-  await window.pdfApi?.getAiPanelPrefs?.()
+  await window.pdfApi
+    ?.getAiPanelPrefs?.()
     .then(applyAiPanelPrefs)
     .catch(() => {})
   window.pdfApi?.onAiPanelPrefsChanged?.(applyAiPanelPrefs)
