@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 type Tab = 'docs' | 'sheets' | 'pdf'
 
@@ -21,20 +21,13 @@ function ThemeToggle() {
       }
     }
     applyTheme('system')
-    window.desktop?.onThemeChanged?.(applyTheme)
-  }, [])
+  }, [theme, setTheme])
 
   const cycleTheme = () => {
     const next: ('light' | 'dark' | 'system')[] = ['light', 'dark', 'system']
     const current = next.indexOf(theme)
     const newTheme = next[(current + 1) % next.length]
     setTheme(newTheme)
-    if (newTheme === 'system') {
-      document.documentElement.removeAttribute('data-theme')
-    } else {
-      document.documentElement.setAttribute('data-theme', newTheme)
-    }
-    window.desktop?.onThemeChanged?.(newTheme)
   }
 
   return (
@@ -44,12 +37,38 @@ function ThemeToggle() {
   )
 }
 
+async function applyThemeToFrame(iframe: HTMLIFrameElement, theme: 'light' | 'dark' | 'system') {
+  const doc = iframe.contentDocument
+  if (!doc) return
+  doc.documentElement.setAttribute('data-theme', theme)
+}
+
+async function switchTab(tab: Tab, iframe: HTMLIFrameElement, appTheme: 'light' | 'dark' | 'system') {
+  const urlMap: Record<Tab, string> = {
+    docs: 'http://localhost:5173',
+    sheets: 'http://localhost:5174',
+    pdf: 'http://localhost:5175',
+  }
+  iframe.src = urlMap[tab]
+  if (appTheme !== 'system') {
+    await applyThemeToFrame(iframe, appTheme)
+  }
+}
+
 export function App() {
   const [activeTab, setActiveTab] = useState<Tab>('docs')
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system')
 
-  const switchTab = async (tab: Tab) => {
+  useEffect(() => {
+    document.documentElement.removeAttribute('data-theme')
+    document.documentElement.setAttribute('data-theme', theme)
+  }, [theme])
+
+  const activeFrameRef = useRef<HTMLIFrameElement | null>(null)
+
+  const switchTabLocal = (tab: Tab) => {
     setActiveTab(tab)
-    window.desktop?.switchTab?.(tab)
+    switchTab(tab, activeFrameRef.current!, theme)
   }
 
   return (
@@ -60,7 +79,7 @@ export function App() {
           <button
             key={tab.id}
             className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => switchTab(tab.id)}
+            onClick={() => setActiveTab(tab.id)}
           >
             {tab.icon} {tab.label}
           </button>
@@ -69,24 +88,9 @@ export function App() {
         <ThemeToggle />
       </div>
       <div className="renderer-frame">
-        {activeTab === 'docs' && (
-          <iframe
-            title="Docs"
-            src={window.location.origin === 'file:' ? '../docs/src/renderer/index.html' : 'http://localhost:5173'}
-          />
-        )}
-        {activeTab === 'sheets' && (
-          <iframe
-            title="Sheets"
-            src={window.location.origin === 'file:' ? '../sheets/src/renderer/index.html' : 'http://localhost:5174'}
-          />
-        )}
-        {activeTab === 'pdf' && (
-          <iframe
-            title="PDF"
-            src={window.location.origin === 'file:' ? '../pdf/src/renderer/index.html' : 'http://localhost:5175'}
-          />
-        )}
+        {activeTab === 'docs' && <iframe ref={(el) => { activeFrameRef.current = el }} title="Docs" src="http://localhost:5173" />}
+        {activeTab === 'sheets' && <iframe ref={(el) => { activeFrameRef.current = el }} title="Sheets" src="http://localhost:5174" />}
+        {activeTab === 'pdf' && <iframe ref={(el) => { activeFrameRef.current = el }} title="PDF" src="http://localhost:5175" />}
       </div>
     </div>
   )

@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+package-lock.json.bak
+npm-debug.log*
+yarn-error.log*
+yarn-lock.json
+
+# Build output
+apps/*/out/
+apps/*/dist/
+apps/*/release/
+apps/*/.vite/
+apps/*/{.dev,vite}.* 
+packages/*/dist/
+packages/*/build/
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE / editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS / environment
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+
+# Temporary / cache
+tmp/
+temp/
+cache/
+*.un~

@@ -1,4 +1,4 @@
-@import '@genoffice/ui/tokens.css';
+/* Tokens importado via @genoffice/ui no build. O Vite de desenvolvimento precisa do alias; este projeto usa CSS puro, portanto mantém o valor padrão do tema. */
 
 * {
   box-sizing: border-box;
