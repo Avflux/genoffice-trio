@@ -132,3 +132,28 @@ genoffice-trio/
 3. **Caminho do Preload no Electron**: Corrigido o caminho do script preload para `path.join(__dirname, '../preload/index.js')`, compatível com a estrutura de saída do `electron-vite`.
 4. **Shell Renderer**: Adicionado suporte de URL de desenvolvimento (`http://localhost:5176`), tolerância a reconexão automática e persistência das abas na renderização.
 5. **Configuração de ESLint e Prettier**: Criados os arquivos `eslint.config.mjs` e `.prettierrc` para linting e formatação limpos em todo o repositório.
+
+---
+
+## 🛑 Resolução de Problemas (Troubleshooting)
+
+### Erro: `Port is already in use` (Porta ocupada)
+
+Se você receber erros indicando que uma porta já está em uso (ex: `Port 5173 is already in use` ou `Port 5176 is already in use`), isso ocorre quando processos `node` de execuções anteriores permaneceram ativos em segundo plano.
+
+O `concurrently` (com flag `-k`) encerra todos os outros servidores assim que o primeiro falha, exibindo como última linha o encerramento do processo (como o `pdf` saindo com código 1), embora o erro real seja a porta duplicada.
+
+Para liberar automaticamente todas as portas (5173, 5174, 5175, 5176), execute:
+
+```bash
+npm run clean:ports
+```
+
+E em seguida execute o app novamente:
+
+```bash
+npm run dev
+# ou
+npm run dev:electron
+```
+

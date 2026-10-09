@@ -21,6 +21,7 @@
     "dev:sheets": "npm run dev -w @genoffice/sheets",
     "dev:pdf": "npm run dev -w @genoffice/pdf",
     "dev:shell": "npm run dev -w @genoffice/shell",
+    "clean:ports": "powershell -Command \"try { Get-NetTCPConnection -LocalPort 5173,5174,5175,5176 -ErrorAction Stop | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } } catch {}; exit 0\"",
     "build": "npm run build -w @genoffice/docs && npm run build -w @genoffice/sheets && npm run build -w @genoffice/pdf && npm run build -w @genoffice/shell",
     "build:shell": "npm run build -w @genoffice/shell",
     "format": "prettier --write \"**/*.{ts,tsx,css,json,mjs}\"",
